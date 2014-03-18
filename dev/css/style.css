@@ -126,11 +126,10 @@ body{
 
 		#conteudo{
 			position: absolute;
-			width: 780px;
-			height: 540px;
-			left: 10px;
+			width: 600px;
+			height: 480px;
+			left: 60px;
 			top: 50px;
-
 		}
 
 			/*.path-opt{
