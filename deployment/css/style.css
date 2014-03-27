@@ -51,7 +51,7 @@ body{
 			position: absolute;
 			width: 500px;
 			height: 30px;
-			left: 100px;
+			left: 50px;
 			top: 10px;
 			line-height: 30px;
 			font-size: 25px;
@@ -83,8 +83,9 @@ body{
 		#raio{
 			position: absolute;
 			height: 20px;
-			left: 5px;
-			top: 15px;
+			width: 355px;
+			left: 30px;
+			top: 565px;
 			line-height: 20px;
 			text-align: center;
 			/*
@@ -99,9 +100,9 @@ body{
 
 		#vel{
 			position: absolute;
-			width: 700px;
+			width: 355px;
 			height: 20px;
-			left: 50px;
+			left: 415px;
 			top: 565px;
 			line-height: 20px;
 			text-align: center;
@@ -128,7 +129,7 @@ body{
 			position: absolute;
 			width: 600px;
 			height: 480px;
-			left: 60px;
+			left: 100px;
 			top: 50px;
 		}
 

@@ -19,10 +19,14 @@ var personagem;
 var personw = 80/4;
 var personh = 218/4;
 var vetorVel;
+var dash1, dash2;
+var vetorAcel;
 
 var rMin = 120;
 var rMax = 200;
-var m = 100/(rMax - rMin);
+var rMinReal = 20;
+var rMaxReal = 100;
+var m = (rMaxReal - rMinReal)/(rMax - rMin);
 
 function init(){
 	//var conteudo = $("#conteudo");
@@ -36,15 +40,18 @@ function init(){
 	checkVetorial.attr('checked', true);
 
 	conteudo = Raphael("conteudo");
-	circleImage = conteudo.image("img/background.jpg", 300 - r, 240 - r, 2 * r, 2 * r).attr("opacity", "0.8");
+	//circleImage = conteudo.image("img/background.jpg", 300 - r, 240 - r, 2 * r, 2 * r).attr("opacity", "0.8");
 	personagem = conteudo.image("img/person.png", 300 + r, 240, personw, personh);
-	//circle = conteudo.circle(300, 240, r);
-	mcArco = conteudo.path("M0,0").attr("stroke-width", "5");
+	circle = conteudo.circle(300, 240, r);
+	mcArco = conteudo.path("M0,0").attr("stroke-width", "3");
 	mcRaio = conteudo.path("M0,0").attr({"fill": "#0000FF", 'fill-opacity': 0.5});
 	vetorVel = conteudo.path("M0,0").attr({"stroke-width": "3", "stroke": "#00FF00", fill:"#00FF00"});
+	vetorAcel = conteudo.path("M0,0").attr({"stroke-width": "3", "stroke": "#FF0000", fill:"#FF0000"});
+	dash1 = conteudo.path("M0,0").attr({'stroke-dasharray': "--"});
+	dash2 = conteudo.path("M0,0").attr({'stroke-dasharray': "--"});
 
 	velSlider = new Dragdealer('velSlider', {slide:false, steps:101, snap:true, x:0.5, animationCallback: velMoving});
-	raioSlider = new Dragdealer('raioSlider', {slide:false, horizontal:false, vertical:true, steps:101, snap:true, y:0.5, animationCallback: raioMoving});
+	raioSlider = new Dragdealer('raioSlider', {slide:false, steps:(rMaxReal - rMinReal + 1), snap:true, x:0.5, animationCallback: raioMoving});
 
 	checkEscalar.on("click", escClick);
 	checkVetorial.on("click", vetClick);
@@ -56,9 +63,11 @@ function init(){
 
 function drawCircle(){
 	var raio = getR();
-	circleImage.attr({x: 300 - raio, y: 240 - raio, width: 2 * raio, height: 2 * raio});
-	//circle.attr("r", raio);
-	circleImage.transform("r" + angle);
+	//circleImage.attr({x: 300 - raio, y: 240 - raio, width: 2 * raio, height: 2 * raio});
+	circle.attr("r", raio);
+	dash1.attr("path", "M300,240L" + (300 + raio) + ",240");
+	dash2.attr("path", "M300,240L" + (300 + raio * Math.cos(angle * Math.PI/180)) + "," + (240 + raio * Math.sin(angle * Math.PI/180)));
+	//circleImage.transform("r" + angle);
 }
 
 function updatePerson(){7
@@ -77,32 +86,51 @@ function updateVetorVel(){
 		vetorVel.hide();
 	}
 	
-	var raio = getR() + 5;
+	var raio = getR();
 	var posX = 300 + (raio * Math.cos(angle * Math.PI/180));
 	var posY = 240 + (raio * Math.sin(angle * Math.PI/180));
-	vetorVel.attr("path", "M" + (posX) + "," + posY + "L" + (posX) + "," + (posY + Number(vel) * 2) + "L" + (posX - 5) + "," + (posY + Number(vel) * 2) + "L" + posX + "," + (posY + Number(vel) * 2 + (Number(vel) < 0 ? -8 : 8)) + "L" + (posX + 5) + "," + (posY + Number(vel) * 2) + "L" + (posX) + "," + (posY + Number(vel) * 2));
+	vetorVel.attr("path", "M" + (posX) + "," + posY + "L" + (posX) + "," + (posY - getVel()) + "L" + (posX - 5) + "," + (posY - getVel()) + "L" + posX + "," + (posY - getVel() + (Number(vel) > 0 ? -8 : 8)) + "L" + (posX + 5) + "," + (posY - getVel()) + "L" + (posX) + "," + (posY - getVel()));
 	vetorVel.transform(["R", angle, posX ,posY]);
 }
 
+function updateVetorAcel(){
+	if(checkVetorial.is(':checked')){
+		if(Number(vel) == 0) vetorAcel.hide();
+		else vetorAcel.show();
+	}else{
+		vetorAcel.hide();
+	}
+	var raio = getR();
+	var acel = getAceleration();
+	var posX = 300 + (raio * Math.cos(angle * Math.PI/180));
+	var posY = 240 + (raio * Math.sin(angle * Math.PI/180));
+	vetorAcel.attr("path", "M" + posX + "," + posY + "L" + (posX - acel) + "," + posY + "L" + (posX - acel) + "," + (posY - 5) + "L" + (posX - acel - 8) + "," + posY + "L" + (posX - acel) + "," + (posY + 5) + "L" + (posX - acel) + "," + posY);
+	vetorAcel.transform(["R", angle, posX ,posY]);
+}
+
 function getR(){
-	return (r - 10)/m + rMin;
+	return (r - rMinReal)/m + rMin;
 }
 
 function escClick(e){
 	if(checkEscalar.is(':checked')){
 		mcArco.show();
 		mcRaio.show();
+		dash1.show();
+		dash2.show();
 	}else{
 		mcArco.hide();
 		mcRaio.hide();
+		dash1.hide();
+		dash2.hide();
 	}
 }
 
 function vetClick(e){
 	if(checkVetorial.is(':checked')){
-		personagem.show();
+		//personagem.show();
 	}else{
-		personagem.hide();
+		//personagem.hid(e);
 	}
 }
 
@@ -116,19 +144,27 @@ function velMoving(x, y){
 }
 
 function raioMoving(x, y){
-	var newRaio = ((y * 100) + 10).toFixed(0);
+	var newRaio = ((x * (rMaxReal - rMinReal)) + rMinReal).toFixed(0);
 
 	r = newRaio;
 	divRaio.html("Raio: " + newRaio);
 	//update();
 }
 
+function getVel(){
+	return vel/r * 50;
+}
+
 function getTheta(t){
-	return vel * t;
+	return getVel() * t;
 }
 
 function getArch(theta){
 	return r * theta * Math.PI/360;
+}
+
+function getAceleration(){
+	return Math.pow(vel, 2)/r;
 }
 
 function update(timestamp){
@@ -137,19 +173,20 @@ function update(timestamp){
 	current = timestamp;
 	//Angulo 
 	var deltaAngle = getTheta(dt);
-	angle += deltaAngle;
+	angle -= deltaAngle;
 	angle = angle%360;
-	if(angle < 0) angle += 360;
-	divAngle.html("Ângulo: " + angle.toFixed(1) + "º");
+	if(angle > 0) angle -= 360;
+	divAngle.html("Ângulo: " + (angle * -1).toFixed(1) + "º" + " (" + (angle * Math.PI/180 * -1).toFixed(2) + "rad)");
 
-	arch = getArch(angle);
-	divArc.html("Arco: " + arch.toFixed(1));
+	arch = getArch(angle * -1);
+	divArc.html("Arco: " + arch.toFixed(1) + "m");
 
 
 	updatePerson();
 	updateVetorVel();
+	updateVetorAcel();
 	drawCircle();
-	if(angle > 0){
+	if(angle < 0){
 		var paths = getPaths();
 		mcRaio.attr("path", paths.raio);
 		mcArco.attr("path", paths.arco)
@@ -165,13 +202,15 @@ function getPaths(){
 	var cte = Math.PI/180;
 	var cx = 300;
 	var cy = 240;
+	//var nAngle = angle * -1;
 	var rAngle = 60;
-	var rTotal = getR() + 3;
+	var rTotal = getR();
 	var ptFinal = {x:rAngle * Math.cos(angle * cte), y:rAngle * Math.sin(angle * cte)};
 	var raioPath = "M" + (ptFinal.x + cx) + "," + (ptFinal.y + cy) + "L" + cx + "," + cy + "L" + (cx + rAngle) + "," + cy;
+	//var raioPath = "M" + (cx + rAngle) + "," + cy;
 	var arcoPath = "M" + (cx + rTotal) + "," + cy;
-
-	for (var i = 0; i <= angle; i+=1) {
+	//console.log(angle);
+	for (var i = 0; i >= angle; i-=1) {
 		var ang = i;
 
 		var rx = rAngle * Math.cos(ang * cte);

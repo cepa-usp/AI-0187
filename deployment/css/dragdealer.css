@@ -8,9 +8,9 @@
 
 .dragdealer {
   position: absolute;
-  left: 50px;
+  left: 415px;
   top: 550px;
-  width: 700px;
+  width: 355px;
   height: 3px;
   background: #EEE;
 }
@@ -36,21 +36,21 @@
 
 .dragdealerVertical {
   position: absolute;
-  left: 35px;
-  top: 50px;
-  width: 3px;
-  height: 450px;
+  left: 30px;
+  top: 550px;
+  width: 355px;
+  height: 3px;
   background: #EEE;
 }
 .dragdealerVertical .handle {
   position: absolute;
-  top: -5px;
-  left: -8px;
+  top: -8px;
+  left: -5px;
   cursor: pointer;
 }
 .dragdealerVertical .red-bar {
-  width: 20px;
-  height: 10px;
+  width: 10px;
+  height: 20px;
   background: #F55F5F;
   color: #FFF;
   font-size: 14px;
