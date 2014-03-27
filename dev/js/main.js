@@ -147,7 +147,7 @@ function raioMoving(x, y){
 	var newRaio = ((x * (rMaxReal - rMinReal)) + rMinReal).toFixed(0);
 
 	r = newRaio;
-	divRaio.html("Raio: " + newRaio);
+	divRaio.html("Raio: " + newRaio + "m");
 	//update();
 }
 
