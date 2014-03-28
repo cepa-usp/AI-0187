@@ -136,7 +136,8 @@ function vetClick(e){
 
 
 function velMoving(x, y){
-	var newVel = (((Number(x.toFixed(2)) - 0.5) * Math.PI/2) * 180/Math.PI).toFixed(0);
+	//var newVel = (((Number(x.toFixed(2)) - 0.5) * Math.PI/2) * 180/Math.PI).toFixed(0);
+	var newVel = (Number(x.toFixed(2)) - 0.5) * 80;
 
 	vel = newVel;
 	divVel.html("Velocidade: " + newVel);
