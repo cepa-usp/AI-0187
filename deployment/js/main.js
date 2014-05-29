@@ -50,7 +50,7 @@ function init(){
 	dash1 = conteudo.path("M0,0").attr({'stroke-dasharray': "--"});
 	dash2 = conteudo.path("M0,0").attr({'stroke-dasharray': "--"});
 
-	velSlider = new Dragdealer('velSlider', {slide:false, steps:101, snap:true, x:0.5, animationCallback: velMoving});
+	velSlider = new Dragdealer('velSlider', {slide:false, steps:81, snap:true, x:0.5, animationCallback: velMoving});
 	raioSlider = new Dragdealer('raioSlider', {slide:false, steps:(rMaxReal - rMinReal + 1), snap:true, x:0.5, animationCallback: raioMoving});
 
 	checkEscalar.on("click", escClick);
@@ -136,10 +136,10 @@ function vetClick(e){
 
 
 function velMoving(x, y){
-	var newVel = (((Number(x.toFixed(2)) - 0.5) * Math.PI/2) * 180/Math.PI).toFixed(0);
+	var newVel = -40 + 80 * x;
 
 	vel = newVel;
-	divVel.html("Velocidade: " + newVel);
+	divVel.html("Velocidade: " + newVel + " m/s");
 	//update(2000);
 }
 
@@ -147,7 +147,7 @@ function raioMoving(x, y){
 	var newRaio = ((x * (rMaxReal - rMinReal)) + rMinReal).toFixed(0);
 
 	r = newRaio;
-	divRaio.html("Raio: " + newRaio + "m");
+	divRaio.html("Raio: " + newRaio + " m");
 	//update();
 }
 
@@ -176,10 +176,10 @@ function update(timestamp){
 	angle -= deltaAngle;
 	angle = angle%360;
 	if(angle > 0) angle -= 360;
-	divAngle.html("Ângulo: " + (angle * -1).toFixed(1) + "º" + " (" + (angle * Math.PI/180 * -1).toFixed(2) + "rad)");
+	divAngle.html("Ângulo: " + (angle * -1).toFixed(1) + "º" + " (" + (angle * Math.PI/180 * -1).toFixed(2) + " rad)");
 
 	arch = getArch(angle * -1);
-	divArc.html("Arco: " + arch.toFixed(1) + "m");
+	divArc.html("Arco: " + arch.toFixed(1) + " m");
 
 
 	updatePerson();
